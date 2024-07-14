@@ -22,7 +22,7 @@ const chartData = [
 const chartConfig = {
   total_amount_cents: {
     label: "Expense",
-    color: "#FFFFFF",
+    color: "hsl(var(--muted-foreground))",
     valueFormatter: (value: number) => centsToDollarString(value),
   },
 } satisfies ChartConfig;

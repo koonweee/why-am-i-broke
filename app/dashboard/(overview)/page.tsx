@@ -11,8 +11,8 @@ export default async function Page() {
     <div>
       <h1 className={`mb-4 text-xl md:text-2xl px-1`}>cash money $</h1>
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <RecentTransactions />
         <TransactionsChart />
+        <RecentTransactions />
       </div>
     </div>
   );
