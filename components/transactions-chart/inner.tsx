@@ -69,6 +69,15 @@ export function TransactionsChartInner(props: Props) {
           fill="var(--color-total_amount_cents)"
           fillOpacity={0.2}
           stroke="var(--color-total_amount_cents)"
+          dot={{
+            strokeWidth: 1,
+            opacity: 0.8,
+          }}
+          activeDot={{
+            strokeWidth: 2,
+            opacity: 1,
+            fill: "hsl(var(--accent-foreground))",
+          }}
         />
       </AreaChart>
     </ChartContainer>
