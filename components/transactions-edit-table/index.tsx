@@ -1,6 +1,7 @@
 import { fetchRecentTransactions } from "@/data/query/transactions";
 import { Transaction } from "@/data/types";
 import { centsToDollarString } from "@/lib/utils";
+import { unstable_noStore } from "next/cache";
 
 interface Props {
   query?: string;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export async function TransactionsEditTable(props: Props) {
+  unstable_noStore();
   const transactions = await fetchRecentTransactions(40);
   const groupedTransactions = groupTransactionsByDay(transactions);
   console.log(groupedTransactions);

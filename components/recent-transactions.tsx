@@ -1,9 +1,11 @@
 import DashboardCard from "@/components/dashboard-card";
 import { fetchRecentTransactions } from "@/data/query/transactions";
 import { centsToDollarString } from "@/lib/utils";
+import { unstable_noStore } from "next/cache";
 
 export default async function RecentTransactions() {
-  const recentTransactions = await fetchRecentTransactions(5);
+  unstable_noStore();
+  const recentTransactions = await fetchRecentTransactions(10);
   return (
     <DashboardCard title="Recent">
       <div className="flex flex-col gap-1">
