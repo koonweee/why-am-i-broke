@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 const transactions: Transaction[] = [
   {
     uuid: uuid(),
-    date: new Date("2024-06-15"),
+    timestamp_utc: new Date("2024-06-15"),
     is_positive: true,
     amount_cents: 5000,
     currency_code: CurrencyCode.USD,
@@ -15,7 +15,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-06-16"),
+    timestamp_utc: new Date("2024-06-16"),
     is_positive: true,
     amount_cents: 10050,
     currency_code: CurrencyCode.USD,
@@ -24,7 +24,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-06-16"),
+    timestamp_utc: new Date("2024-06-16"),
     is_positive: true,
     amount_cents: 20000,
     currency_code: CurrencyCode.USD,
@@ -33,7 +33,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-06-17"),
+    timestamp_utc: new Date("2024-06-17"),
     is_positive: true,
     amount_cents: 10000,
     currency_code: CurrencyCode.USD,
@@ -42,7 +42,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-01"),
+    timestamp_utc: new Date("2024-07-01"),
     is_positive: true,
     amount_cents: 15000,
     currency_code: CurrencyCode.USD,
@@ -51,7 +51,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-02"),
+    timestamp_utc: new Date("2024-07-02"),
     is_positive: true,
     amount_cents: 8000,
     currency_code: CurrencyCode.USD,
@@ -60,7 +60,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-05-15"),
+    timestamp_utc: new Date("2024-05-15"),
     is_positive: true,
     amount_cents: 12000,
     currency_code: CurrencyCode.USD,
@@ -69,7 +69,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-05-16"),
+    timestamp_utc: new Date("2024-05-16"),
     is_positive: true,
     amount_cents: 25000,
     currency_code: CurrencyCode.USD,
@@ -78,7 +78,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-01"),
+    timestamp_utc: new Date("2024-07-01"),
     is_positive: true,
     amount_cents: 5000,
     currency_code: CurrencyCode.USD,
@@ -87,7 +87,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-02"),
+    timestamp_utc: new Date("2024-07-02"),
     is_positive: true,
     amount_cents: 10000,
     currency_code: CurrencyCode.USD,
@@ -96,7 +96,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-03"),
+    timestamp_utc: new Date("2024-07-03"),
     is_positive: true,
     amount_cents: 15000,
     currency_code: CurrencyCode.USD,
@@ -105,7 +105,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-04"),
+    timestamp_utc: new Date("2024-07-04"),
     is_positive: true,
     amount_cents: 8000,
     currency_code: CurrencyCode.USD,
@@ -114,7 +114,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-05"),
+    timestamp_utc: new Date("2024-07-05"),
     is_positive: true,
     amount_cents: 12000,
     currency_code: CurrencyCode.USD,
@@ -123,7 +123,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-06"),
+    timestamp_utc: new Date("2024-07-06"),
     is_positive: true,
     amount_cents: 25000,
     currency_code: CurrencyCode.USD,
@@ -132,7 +132,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-07"),
+    timestamp_utc: new Date("2024-07-07"),
     is_positive: true,
     amount_cents: 5000,
     currency_code: CurrencyCode.USD,
@@ -141,7 +141,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-08"),
+    timestamp_utc: new Date("2024-07-08"),
     is_positive: true,
     amount_cents: 10000,
     currency_code: CurrencyCode.USD,
@@ -150,7 +150,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-09"),
+    timestamp_utc: new Date("2024-07-09"),
     is_positive: true,
     amount_cents: 15000,
     currency_code: CurrencyCode.USD,
@@ -159,7 +159,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-10"),
+    timestamp_utc: new Date("2024-07-10"),
     is_positive: true,
     amount_cents: 8000,
     currency_code: CurrencyCode.USD,
@@ -168,7 +168,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-11"),
+    timestamp_utc: new Date("2024-07-11"),
     is_positive: true,
     amount_cents: 12000,
     currency_code: CurrencyCode.USD,
@@ -177,7 +177,7 @@ const transactions: Transaction[] = [
   },
   {
     uuid: uuid(),
-    date: new Date("2024-07-12"),
+    timestamp_utc: new Date("2024-07-12"),
     is_positive: true,
     amount_cents: 25000,
     currency_code: CurrencyCode.USD,

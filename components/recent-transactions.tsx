@@ -11,7 +11,7 @@ export default async function RecentTransactions() {
           const { uuid, amount_cents, description } = transaction;
           return (
             <div key={uuid}>
-              <div className="flex flex-row justify-between gap-4">
+              <div className="flex flex-row justify-between gap-4 text-sm">
                 <p>{description}</p>
                 <p>{centsToDollarString(amount_cents)}</p>
               </div>

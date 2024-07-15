@@ -9,7 +9,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { AggregateBy, AggregatedTransactions, Transaction } from "@/data/types";
-import { centsToDollarString, jsDateToSQLDate } from "@/lib/utils";
+import { centsToDollarString } from "@/lib/utils";
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -49,16 +49,16 @@ export function TransactionsChartInner(props: Props) {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickCount={2}
+          tickCount={5}
         />
-        <YAxis
+        {/* <YAxis
           type="number"
           domain={[0, "dataMax"]}
           tickLine={false}
           axisLine={false}
           tickCount={2}
           tickFormatter={(value: number) => centsToDollarString(value)}
-        />
+        /> */}
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="line" />}

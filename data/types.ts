@@ -1,3 +1,5 @@
+import { sqlUTCTimestampToJSDate } from "@/lib/utils";
+
 export enum CurrencyCode {
   USD = "USD",
   EUR = "EUR",
@@ -8,11 +10,21 @@ export enum CurrencyCode {
 
 export type Transaction = {
   uuid: string;
-  date: Date;
+  timestamp_utc: Date;
   is_positive: boolean;
   amount_cents: number;
   currency_code: CurrencyCode;
-  description: string;
+  description?: string;
+  category: string;
+};
+
+export type SqlTransaction = {
+  uuid: string;
+  timestamp_utc: string;
+  is_positive: boolean;
+  amount_cents: number;
+  currency_code: CurrencyCode;
+  description?: string;
   category: string;
 };
 
@@ -28,4 +40,13 @@ export enum AggregateBy {
   WEEK = "week",
   MONTH = "month",
   YEAR = "year",
+}
+
+export function sqlTransactionToTransaction(
+  sqlTransaction: SqlTransaction
+): Transaction {
+  return {
+    ...sqlTransaction,
+    timestamp_utc: sqlUTCTimestampToJSDate(sqlTransaction.timestamp_utc),
+  };
 }

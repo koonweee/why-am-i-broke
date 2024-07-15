@@ -1,3 +1,4 @@
+import { MonthStats } from "@/components/month-stats";
 import RecentTransactions from "@/components/recent-transactions";
 import TransactionsChart from "@/components/transactions-chart";
 import { Metadata } from "next";
@@ -8,12 +9,10 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div>
-      <h1 className={`mb-4 text-xl md:text-2xl px-1`}>cash money $</h1>
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <TransactionsChart />
-        <RecentTransactions />
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <MonthStats />
+      <TransactionsChart />
+      <RecentTransactions />
     </div>
   );
 }

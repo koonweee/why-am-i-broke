@@ -1,7 +1,8 @@
-import bcrypt from "bcrypt";
-import { db } from "@vercel/postgres";
-import { jsDateToSQLDate } from "@/lib/utils";
 import { transactions } from "@/app/seed/seed-data";
+import { Transaction } from "@/data/types";
+import { jsDateToSQLUTCTimestamp } from "@/lib/utils";
+import { db } from "@vercel/postgres";
+const fs = require("fs");
 
 const client = await db.connect();
 
@@ -12,23 +13,23 @@ async function seedTransactions() {
   await client.sql`
     CREATE TABLE IF NOT EXISTS transactions (
       uuid UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      date DATE,
-      is_positive BOOLEAN,
-      amount_cents INTEGER,
-      currency_code VARCHAR(3),
+      timestamp_utc TIMESTAMP NOT NULL,
+      is_positive BOOLEAN NOT NULL,
+      amount_cents INTEGER NOT NULL,
+      currency_code VARCHAR(3) NOT NULL,
       description TEXT,
-      category VARCHAR(255)
+      category VARCHAR(255) NOT NULL
     );
   `;
   const insertedTransactions = await Promise.all(
     transactions.map(
       (transaction) => client.sql`
-        INSERT INTO transactions (uuid, date, is_positive, amount_cents, currency_code, description, category)
-        VALUES (${transaction.uuid}, ${jsDateToSQLDate(transaction.date)}, ${
-        transaction.is_positive
-      }, ${transaction.amount_cents}, ${transaction.currency_code}, ${
-        transaction.description
-      }, ${transaction.category})
+        INSERT INTO transactions (uuid, timestamp_utc, is_positive, amount_cents, currency_code, description, category)
+        VALUES (${transaction.uuid}, ${jsDateToSQLUTCTimestamp(
+        transaction.timestamp_utc
+      )}, ${transaction.is_positive}, ${transaction.amount_cents}, ${
+        transaction.currency_code
+      }, ${transaction.description}, ${transaction.category})
         ON CONFLICT (uuid) DO NOTHING;
       `
     )
@@ -38,10 +39,6 @@ async function seedTransactions() {
 }
 
 export async function GET() {
-  // return Response.json({
-  //   message:
-  //     'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  // });
   try {
     await client.sql`BEGIN`;
     await seedTransactions();

@@ -1,11 +1,22 @@
-import { AggregateBy, AggregatedTransactions, Transaction } from "@/data/types";
-import { jsDateToSQLDate } from "@/lib/utils";
+import {
+  AggregateBy,
+  AggregatedTransactions,
+  SqlTransaction,
+  sqlTransactionToTransaction,
+  Transaction,
+} from "@/data/types";
+import { jsDateToSQLUTCTimestamp } from "@/lib/utils";
 import { sql } from "@vercel/postgres";
 
-export async function fetchRecentTransactions(numberOfTransactions: number) {
+export async function fetchRecentTransactions(
+  numberOfTransactions: number,
+  offset?: number
+) {
   try {
     const data =
-      await sql<Transaction>`SELECT * FROM transactions ORDER BY date DESC LIMIT ${numberOfTransactions}`;
+      await sql<Transaction>`SELECT * FROM transactions ORDER BY timestamp_utc DESC LIMIT ${numberOfTransactions} OFFSET ${
+        offset ?? 0
+      }`;
     return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -23,12 +34,12 @@ export async function fetchAggregatedTransactionsForDateRange(
     const data = await sql<AggregatedTransactions>`
       SELECT
         ${aggregateBy} as aggregated_by,
-        to_char(date, ${sqlDateFormat}) as aggregated_value,
+        to_char(timestamp_utc, ${sqlDateFormat}) as aggregated_value,
         COUNT(*) as transaction_count,
         CAST(SUM(amount_Cents) AS INTEGER) as total_amount_cents
-      FROM transactions WHERE date >= ${jsDateToSQLDate(
+      FROM transactions WHERE timestamp_utc >= ${jsDateToSQLUTCTimestamp(
         startDate
-      )} AND date <= ${jsDateToSQLDate(endDate)}
+      )} AND timestamp_utc <= ${jsDateToSQLUTCTimestamp(endDate)}
       GROUP BY aggregated_value
       ORDER BY aggregated_value ASC`;
     return data.rows;

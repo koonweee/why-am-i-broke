@@ -13,7 +13,7 @@ export default async function TransactionsChart() {
     AggregateBy.DAY
   );
   return (
-    <DashboardCard title="Month overview">
+    <DashboardCard>
       <TransactionsChartInner data={data} />
     </DashboardCard>
   );
