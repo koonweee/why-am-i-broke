@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   try {
     transactionCreationRequestSchema.parse(requestJson);
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.issues }), {
+    return new Response(JSON.stringify({ error: error }), {
       status: 400,
     });
   }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     )}, ${currency_code ?? CurrencyCode.USD})
   `;
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: error }), {
       status: 500,
     });
   }
