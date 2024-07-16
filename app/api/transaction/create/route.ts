@@ -4,6 +4,7 @@ import {
   TransactionCreationRequest,
   transactionCreationRequestSchema,
 } from "../types";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: Request) {
   return new Response("Hello World", { status: 200 });
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
         currency_code: currency_code ?? CurrencyCode.USD,
       },
     });
+    revalidatePath("/dashboard");
   } catch (error) {
     return new Response(JSON.stringify({ error: error }), {
       status: 500,
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
   }
 
   // Return the amount
-  return new Response(JSON.stringify({ requestJson }), {
+  return new Response(JSON.stringify({ requestJson, status: 200 }), {
     status: 200,
   });
 }
