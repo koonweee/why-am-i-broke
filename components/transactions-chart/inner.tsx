@@ -61,14 +61,6 @@ export function TransactionsChartInner() {
           tickMargin={8}
           tickCount={5}
         />
-        {/* <YAxis
-          type="number"
-          domain={[0, "dataMax"]}
-          tickLine={false}
-          axisLine={false}
-          tickCount={2}
-          tickFormatter={(value: number) => centsToDollarString(value)}
-        /> */}
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="line" />}

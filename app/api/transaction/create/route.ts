@@ -1,10 +1,9 @@
+import { CurrencyCode } from "@/data/types";
+import prisma from "@/db";
 import {
   TransactionCreationRequest,
   transactionCreationRequestSchema,
 } from "../types";
-import { jsDateToSQLUTCTimestamp } from "../../../../lib/utils";
-import { sql } from "@vercel/postgres";
-import { CurrencyCode } from "@/data/types";
 
 export async function GET(request: Request) {
   return new Response("Hello World", { status: 200 });
@@ -17,9 +16,12 @@ export async function POST(request: Request) {
   try {
     transactionCreationRequestSchema.parse(requestJson);
   } catch (error) {
-    return new Response(JSON.stringify({ error: error }), {
-      status: 400,
-    });
+    return new Response(
+      JSON.stringify({ error: error, request: requestJson }),
+      {
+        status: 400,
+      }
+    );
   }
 
   // Cast the request as a TransactionCreationRequest
@@ -31,15 +33,26 @@ export async function POST(request: Request) {
     timestamp_utc,
     currency_code,
   } = requestJson as TransactionCreationRequest;
-  const insertTimestamp = timestamp_utc ? new Date(timestamp_utc) : new Date();
+  const insertTimestamp = new Date(timestamp_utc);
   // SQL insert
   try {
-    await sql`
-    INSERT INTO transactions (is_positive, amount_cents, description, category, timestamp_utc, currency_code)
-    VALUES (${is_positive}, ${amount_cents}, ${description}, ${category}, ${jsDateToSQLUTCTimestamp(
-      insertTimestamp
-    )}, ${currency_code ?? CurrencyCode.USD})
-  `;
+    //   await sql`
+    //   INSERT INTO transactions (is_positive, amount_cents, description, category, timestamp_utc, currency_code)
+    //   VALUES (${is_positive}, ${amount_cents}, ${description}, ${category}, ${jsDateToSQLUTCTimestamp(
+    //     insertTimestamp
+    //   )}, ${currency_code ?? CurrencyCode.USD})
+    // `;
+
+    await prisma.transactions.create({
+      data: {
+        is_positive: is_positive,
+        amount_cents: amount_cents,
+        description: description,
+        category: category,
+        timestamp_utc: insertTimestamp,
+        currency_code: currency_code ?? CurrencyCode.USD,
+      },
+    });
   } catch (error) {
     return new Response(JSON.stringify({ error: error }), {
       status: 500,
