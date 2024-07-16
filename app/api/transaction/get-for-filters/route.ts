@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 import { PrismaClient } from "@prisma/client";
+import prisma from "@/db";
 
 /**
  * Fetches Transactions from the database based on the filters provided
  * @param request
  */
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   let requestFiltersFromParams;

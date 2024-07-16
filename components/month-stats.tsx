@@ -2,66 +2,39 @@
 import DashboardCard from "@/components/dashboard-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Transaction } from "@/data/types";
-import { centsToDollarString, fetcher } from "@/lib/utils";
-import React, { useEffect } from "react";
-import useSWR from "swr";
+import { useMonthUpToCurrentDate } from "@/hooks/useMonthUpToCurrentDate";
+import { useTransactionsByFilters } from "@/hooks/useTransactionsByFilters";
+import { centsToDollarString } from "@/lib/utils";
 
 export function MonthStats(): JSX.Element {
-  const curDate = new Date();
-  const startDate = new Date(
-    curDate.getFullYear(),
-    curDate.getMonth(),
-    1,
-    0,
-    0,
-    0,
-    0
-  );
-  const endDate = new Date(
-    curDate.getFullYear(),
-    curDate.getMonth(),
-    curDate.getDate() + 1,
-    0,
-    0,
-    0,
-    0
-  );
+  const { curMonthString, startDate, endDate } = useMonthUpToCurrentDate();
+  const { data, error, isLoading } = useTransactionsByFilters({
+    startDatetime: startDate,
+    endDatetime: endDate,
+  });
 
-  const curMonth = curDate.toLocaleString("default", { month: "long" });
-  const searchParams = {
-    startDatetime: startDate.toISOString(),
-    endDatetime: endDate.toISOString(),
-  };
-  const { data, error } = useSWR(
-    ["/api/transaction/get-for-filters", searchParams],
-    ([url, params]) => fetcher(url, params)
-  );
+  const transactions = data?.transactions?.length ? data.transactions : null;
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <DashboardCard title={`${curMonth} spend`}>
-        {data ? (
+      <DashboardCard title={`${curMonthString} spend`}>
+        {transactions ? (
           <div className="text-sm">
-            {centsToDollarString(sumMonthSpend(data.transactions))}
+            {centsToDollarString(sumMonthSpend(transactions))}
           </div>
         ) : (
           <Skeleton className="w-auto h-5" />
         )}
       </DashboardCard>
       <DashboardCard title="U balled on">
-        {data ? (
+        {transactions ? (
           <div className="text-sm">
-            {findHighestSpendDay(data.transactions).date.toLocaleString(
-              "default",
-              {
-                month: "long",
-                day: "numeric",
-              }
-            )}{" "}
+            {findHighestSpendDay(transactions).date.toLocaleString("default", {
+              month: "long",
+              day: "numeric",
+            })}{" "}
             -{" "}
-            {centsToDollarString(
-              findHighestSpendDay(data.transactions).amountCents
-            )}
+            {centsToDollarString(findHighestSpendDay(transactions).amountCents)}
           </div>
         ) : (
           <Skeleton className="w-auto h-5" />
@@ -83,7 +56,7 @@ function findHighestSpendDay(transactions: Transaction[]): {
   for (let i = 0; i < transactions.length; i++) {
     const transaction = transactions[i];
     const date = new Date(transaction.timestamp_utc);
-    const dateKey = date.toISOString().split("T")[0];
+    const dateKey = date.toLocaleDateString();
     if (daySpendMap[dateKey]) {
       daySpendMap[dateKey] += transaction.amount_cents;
     } else {

@@ -51,3 +51,7 @@ export const fetcher = async (
   const data = await response.json();
   return data;
 };
+
+export function pluralize(word: string, count: number) {
+  return count === 1 ? word : word + "s";
+}

@@ -9,8 +9,8 @@ export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
   return (
-    <div className="flex justify-between px-6 py-4 items-center">
-      <div className="flex flex-row gap-4">
+    <div className="flex justify-between px-4 py-2 items-center bg-background border-t">
+      <div className="flex flex-row gap-4 items-center">
         <Button
           variant="outline"
           size="icon"

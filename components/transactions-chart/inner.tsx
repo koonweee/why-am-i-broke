@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/chart";
 import { AggregateBy, AggregatedTransactions, Transaction } from "@/data/types";
 import { centsToDollarString } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTransactionsByFilters } from "@/hooks/useTransactionsByFilters";
+import { useMonthUpToCurrentDate } from "@/hooks/useMonthUpToCurrentDate";
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -27,20 +30,27 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface Props {
-  data: AggregatedTransactions[];
-}
+export function TransactionsChartInner() {
+  const { curMonthString, startDate, endDate } = useMonthUpToCurrentDate();
+  const { data, error, isLoading } = useTransactionsByFilters({
+    startDatetime: startDate,
+    endDatetime: endDate,
+    dateOrder: "asc",
+  });
 
-export function TransactionsChartInner(props: Props) {
-  const { data } = props;
-  const { aggregated_by } =
-    data.length > 0 ? data[0] : { aggregated_by: AggregateBy.DAY };
-  const xAxisFormatter = getXAxisFormatter(aggregated_by as AggregateBy);
-  const formattedData = data.map((d) => ({
+  const aggregated_by = AggregateBy.DAY;
+
+  const aggregatedTransactions = aggregateTransactions(
+    data?.transactions || [],
+    aggregated_by
+  );
+
+  const xAxisFormatter = getXAxisFormatter(aggregated_by);
+  const formattedData = aggregatedTransactions.map((d) => ({
     ...d,
     aggregated_value: xAxisFormatter(d.aggregated_value),
   }));
-  return (
+  return aggregatedTransactions.length ? (
     <ChartContainer config={chartConfig}>
       <AreaChart accessibilityLayer data={formattedData}>
         <CartesianGrid vertical={false} />
@@ -81,6 +91,8 @@ export function TransactionsChartInner(props: Props) {
         />
       </AreaChart>
     </ChartContainer>
+  ) : (
+    <Skeleton className="h-40" />
   );
 }
 
@@ -113,5 +125,54 @@ export function getXAxisFormatter(aggregateBy: AggregateBy) {
     case AggregateBy.YEAR:
       // YYYY to "2024"
       return (value: string) => value;
+  }
+}
+
+export function aggregateTransactions(
+  transactions: Transaction[],
+  aggregateBy: AggregateBy
+): AggregatedTransactions[] {
+  const aggregatedTransactions: AggregatedTransactions[] = [];
+  const transactionsByKey: Record<string, Transaction[]> = {};
+  transactions.forEach((transaction) => {
+    const key = getAggregateKey(transaction, aggregateBy);
+    if (transactionsByKey[key]) {
+      transactionsByKey[key].push(transaction);
+    } else {
+      transactionsByKey[key] = [transaction];
+    }
+  });
+  return Object.entries(transactionsByKey).map(([key, transactions]) => {
+    const totalAmountCents = transactions.reduce(
+      (acc, cur) => acc + cur.amount_cents,
+      0
+    );
+    return {
+      aggregated_by: aggregateBy,
+      aggregated_value: key,
+      total_amount_cents: totalAmountCents,
+      transaction_count: transactions.length,
+    };
+  });
+}
+
+function getAggregateKey(
+  transaction: Transaction,
+  aggregateBy: AggregateBy
+): string {
+  const { timestamp_utc } = transaction;
+  const date = new Date(timestamp_utc);
+  switch (aggregateBy) {
+    case AggregateBy.DAY:
+      return date.toLocaleDateString();
+    case AggregateBy.WEEK:
+      return `not implemented`;
+    case AggregateBy.MONTH:
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+      });
+    case AggregateBy.YEAR:
+      return date.getFullYear().toString();
   }
 }

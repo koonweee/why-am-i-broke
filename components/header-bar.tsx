@@ -10,7 +10,7 @@ export default function HeaderBar() {
     .filter(Boolean)
     .join(" - ");
   return (
-    <div className="flex justify-between px-6 py-4 items-center bg-background">
+    <div className="flex justify-between px-6 py-4 items-center bg-background border-b">
       <h1 className={`text-base md:text-2xl`}>{headerText}</h1>
     </div>
   );
