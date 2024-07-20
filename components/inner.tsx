@@ -19,8 +19,9 @@ function groupTransactionsByDay(
   transactions.forEach((transaction) => {
     const date = transaction.timestamp_utc;
     // Set date to start of day
-    date.setHours(0, 0, 0, 0);
-    const dateKey = date.toISOString();
+    const keyDate = new Date(date);
+    keyDate.setHours(0, 0, 0, 0);
+    const dateKey = keyDate.toISOString();
     if (!grouped[dateKey]) {
       grouped[dateKey] = [];
     }

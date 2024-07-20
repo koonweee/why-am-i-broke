@@ -103,8 +103,9 @@ function getAggregateKey(
   const date = new Date(timestamp_utc);
   switch (aggregateBy) {
     case AggregateBy.DAY:
-      date.setHours(0, 0, 0, 0);
-      return date.toISOString();
+      const keyDate = new Date(date);
+      keyDate.setHours(0, 0, 0, 0);
+      return keyDate.toISOString();
     case AggregateBy.WEEK:
       return `not implemented`;
     case AggregateBy.MONTH:

@@ -32,8 +32,6 @@ export default function TransactionFiltersMenu() {
   });
   const formattedDateRange = formatDateRange(range);
   const onSubmit = (newDateRange: DateRange) => {
-    console.log("newDateRangeFrom", newDateRange.from?.toISOString());
-    console.log("newDateRangeTo", newDateRange.to?.toISOString());
     setFilters({
       ...filters,
       startDate: newDateRange.from ?? startDate,
@@ -48,7 +46,7 @@ export default function TransactionFiltersMenu() {
         <ListFilterIcon size={20} />
       </DrawerTrigger>
       <DrawerContent>
-        <div className="flex flex-col mx-4 mt-4 gap-2">
+        <div className="flex flex-col mx-4 mt-4 gap-2 text-sm font-semibold">
           Date range
           <Popover>
             <PopoverTrigger asChild>

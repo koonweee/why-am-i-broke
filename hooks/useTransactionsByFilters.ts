@@ -30,7 +30,7 @@ export function useTransactionsByFilters(filters: TransactionFiltersInput) {
     ([url, params]) =>
       fetcher(url, params, (data) => {
         return {
-          transactions: data.transactions.map((transaction: Transaction) => {
+          transactions: data.transactions.map((transaction: any) => {
             return {
               ...transaction,
               timestamp_utc: new Date(transaction.timestamp_utc),
