@@ -13,10 +13,12 @@ export const metadata: Metadata = {
 export default async function Page() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Suspense fallback={<Skeleton className="w-full h-40" />}>
+      {/* <Suspense fallback={<Skeleton className="w-full h-40" />}>
         <MonthStats />
+      </Suspense> */}
+      <Suspense fallback={<Skeleton className="w-full h-40" />}>
+        <TransactionsChart />
       </Suspense>
-      <TransactionsChart />
       <Suspense
         fallback={
           <DashboardCard>

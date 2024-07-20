@@ -17,11 +17,14 @@ function groupTransactionsByDay(
 ): Record<string, Transaction[]> {
   const grouped: Record<string, Transaction[]> = {};
   transactions.forEach((transaction) => {
-    const date = transaction.timestamp_utc.toLocaleDateString();
-    if (!grouped[date]) {
-      grouped[date] = [];
+    const date = transaction.timestamp_utc;
+    // Set date to start of day
+    date.setHours(0, 0, 0, 0);
+    const dateKey = date.toISOString();
+    if (!grouped[dateKey]) {
+      grouped[dateKey] = [];
     }
-    grouped[date].push(transaction);
+    grouped[dateKey].push(transaction);
   });
   return grouped;
 }

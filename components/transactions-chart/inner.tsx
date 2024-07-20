@@ -30,21 +30,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TransactionsChartInner() {
-  const { curMonthString, startDate, endDate } = useMonthUpToCurrentDate();
-  const { data, error, isLoading } = useTransactionsByFilters({
-    startDatetime: startDate,
-    endDatetime: endDate,
-    dateOrder: "asc",
-  });
+interface Props {
+  aggregatedTransactions: AggregatedTransactions[];
+}
 
-  const aggregated_by = AggregateBy.DAY;
-
-  const aggregatedTransactions = aggregateTransactions(
-    data?.transactions || [],
-    aggregated_by
-  );
-
+export function TransactionsChartInner({ aggregatedTransactions }: Props) {
+  const { aggregated_by } = aggregatedTransactions[0];
   const xAxisFormatter = getXAxisFormatter(aggregated_by);
   const formattedData = aggregatedTransactions.map((d) => ({
     ...d,
@@ -52,14 +43,24 @@ export function TransactionsChartInner() {
   }));
   return aggregatedTransactions.length ? (
     <ChartContainer config={chartConfig}>
-      <AreaChart accessibilityLayer data={formattedData}>
-        <CartesianGrid vertical={false} />
+      <AreaChart
+        accessibilityLayer
+        data={formattedData}
+        margin={{
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        }}
+      >
+        {/* <CartesianGrid vertical={true} /> */}
         <XAxis
           dataKey="aggregated_value"
           tickLine={false}
           axisLine={false}
           tickMargin={8}
           tickCount={5}
+          hide
         />
         <ChartTooltip
           cursor={false}
@@ -71,15 +72,6 @@ export function TransactionsChartInner() {
           fill="var(--color-total_amount_cents)"
           fillOpacity={0.2}
           stroke="var(--color-total_amount_cents)"
-          dot={{
-            strokeWidth: 1,
-            opacity: 0.8,
-          }}
-          activeDot={{
-            strokeWidth: 2,
-            opacity: 1,
-            fill: "hsl(var(--accent-foreground))",
-          }}
         />
       </AreaChart>
     </ChartContainer>
@@ -156,7 +148,8 @@ function getAggregateKey(
   const date = new Date(timestamp_utc);
   switch (aggregateBy) {
     case AggregateBy.DAY:
-      return date.toLocaleDateString();
+      date.setHours(0, 0, 0, 0);
+      return date.toISOString();
     case AggregateBy.WEEK:
       return `not implemented`;
     case AggregateBy.MONTH:
