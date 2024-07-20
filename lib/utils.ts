@@ -122,7 +122,7 @@ export function getPartOfDateAsStr(date: Date, part: "day" | "month" | "year") {
     case "day":
       return date.getDate().toString();
     case "month":
-      return date.toLocaleDateString("en-US", { month: "short" });
+      return date.toLocaleDateString("en-US", { month: "long" });
     case "year":
       return date.getFullYear().toString();
   }

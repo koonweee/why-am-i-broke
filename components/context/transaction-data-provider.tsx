@@ -58,7 +58,6 @@ export default function TransactionDataProvider({
     endDatetime: filters.endDate,
     dateOrder: filters.dateOrder,
   });
-
   const contextValue: TransactionDataContextValue = {
     filters,
     setFilters: (filters) =>
