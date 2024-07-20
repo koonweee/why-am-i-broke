@@ -1,5 +1,4 @@
 import DashboardCard from "@/components/dashboard-card";
-import { MonthStats } from "@/components/month-stats";
 import RecentTransactions from "@/components/recent-transactions";
 import TransactionsChart from "@/components/transactions-chart";
 import { Skeleton } from "@/components/ui/skeleton";
