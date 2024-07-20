@@ -14,12 +14,13 @@ export default async function RecentTransactions() {
       {recentTransactions.length ? (
         <div className="flex flex-col gap-1">
           {recentTransactions.map((transaction) => {
-            const { uuid, amount_cents, description } = transaction;
+            const { uuid, amount_cents, description, is_positive } =
+              transaction;
             return (
               <div key={uuid}>
                 <div className="flex flex-row justify-between gap-4 text-sm">
                   <p>{description}</p>
-                  <p>{centsToDollarString(amount_cents)}</p>
+                  <p>{centsToDollarString(amount_cents, is_positive)}</p>
                 </div>
               </div>
             );

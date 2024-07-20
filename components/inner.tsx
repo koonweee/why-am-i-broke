@@ -93,7 +93,10 @@ export function TransactionsEditTableInner(props: Props) {
                     </div>
                   </div>
                   <div className="flex flex-col text-end">
-                    {centsToDollarString(transaction.amount_cents)}
+                    {centsToDollarString(
+                      transaction.amount_cents,
+                      transaction.is_positive
+                    )}
                     <div className="text-muted-foreground">
                       {transaction.timestamp_utc.toLocaleTimeString()}
                     </div>

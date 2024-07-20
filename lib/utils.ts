@@ -26,11 +26,14 @@ export function sqlUTCTimestampToJSDate(timestamp: string) {
   return new Date(isoString);
 }
 
-export function centsToDollarString(cents: number) {
-  return (cents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+export function centsToDollarString(cents: number, is_positive: boolean) {
+  return [
+    is_positive ? "" : "-",
+    (cents / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    }),
+  ].join("");
 }
 
 export const fetcher = async (
