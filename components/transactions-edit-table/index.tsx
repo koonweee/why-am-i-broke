@@ -1,20 +1,26 @@
+"use client";
+import { TransactionDataContext } from "@/components/context/transaction-data-provider";
 import { TransactionsEditTableInner } from "@/components/inner";
-import { fetchTransactionsForFilters } from "@/data/query/transactions";
-import { Transaction } from "@/data/types";
-import { centsToDollarString } from "@/lib/utils";
-import { unstable_noStore } from "next/cache";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useContext } from "react";
 
-interface Props {
-  query?: string;
-  page?: number;
-}
-
-export async function TransactionsEditTable(props: Props) {
-  unstable_noStore();
-  const transactions = await fetchTransactionsForFilters({
-    numberOfTransactions: 100,
-  });
+export function TransactionsEditTable() {
+  const transactionData = useContext(TransactionDataContext);
+  const {
+    filters: { startDate },
+    status: { isLoading },
+    data: { aggregatedTransactions = [], sumOfTransactions, transactions = [] },
+  } = transactionData;
   const transactionsExist = transactions.length > 0;
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        {Array.from({ length: 15 }).map((_, index) => (
+          <Skeleton key={index} className="w-full h-20" />
+        ))}
+      </div>
+    );
+  }
   return transactionsExist ? (
     <TransactionsEditTableInner transactions={transactions} />
   ) : (

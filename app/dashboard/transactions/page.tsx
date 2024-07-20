@@ -20,20 +20,5 @@ interface Props {
 export default async function Page(props: Props) {
   const { searchParams } = props;
   const { query, page } = searchParams ?? {};
-  return (
-    <Suspense
-      fallback={
-        <div className="flex flex-col gap-2">
-          {Array.from({ length: 15 }).map((_, index) => (
-            <Skeleton key={index} className="w-full h-20" />
-          ))}
-        </div>
-      }
-    >
-      <TransactionsEditTable
-        query={query}
-        page={page ? Number(page) : undefined}
-      />
-    </Suspense>
-  );
+  return <TransactionsEditTable />;
 }

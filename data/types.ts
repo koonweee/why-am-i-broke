@@ -42,6 +42,11 @@ export enum AggregateBy {
   YEAR = "year",
 }
 
+export enum Order {
+  ASC = "asc",
+  DESC = "desc",
+}
+
 export function sqlTransactionToTransaction(
   sqlTransaction: SqlTransaction
 ): Transaction {

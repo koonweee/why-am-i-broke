@@ -7,7 +7,7 @@ import { unstable_noStore } from "next/cache";
 export default async function RecentTransactions() {
   unstable_noStore();
   const recentTransactions = await fetchTransactionsForFilters({
-    numberOfTransactions: 5,
+    numberOfTransactions: 10,
   });
   return (
     <DashboardCard title="Recent">

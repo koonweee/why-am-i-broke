@@ -1,5 +1,6 @@
 "use client";
 import { TransactionFilters } from "@/app/api/transaction/get-for-filters/route";
+import { Transaction } from "@/data/types";
 import { fetcher } from "@/lib/utils";
 import useSWR from "swr";
 
@@ -26,7 +27,17 @@ export function useTransactionsByFilters(filters: TransactionFiltersInput) {
   }
   return useSWR(
     ["/api/transaction/get-for-filters", searchParams],
-    ([url, params]) => fetcher(url, params)
+    ([url, params]) =>
+      fetcher(url, params, (data) => {
+        return {
+          transactions: data.transactions.map((transaction: Transaction) => {
+            return {
+              ...transaction,
+              timestamp_utc: new Date(transaction.timestamp_utc),
+            };
+          }),
+        };
+      })
   );
 }
 

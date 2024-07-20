@@ -1,9 +1,6 @@
 "use client";
-import DashboardCard from "@/components/dashboard-card";
-import {
-  aggregateTransactions,
-  TransactionsChartInner,
-} from "@/components/transactions-chart/inner";
+import { TransactionDataContext } from "@/components/context/transaction-data-provider";
+import { TransactionsChartInner } from "@/components/transactions-chart/inner";
 import {
   Card,
   CardContent,
@@ -12,34 +9,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AggregateBy, Transaction } from "@/data/types";
-import { useMonthUpToCurrentDate } from "@/hooks/useMonthUpToCurrentDate";
-import { useTransactionsByFilters } from "@/hooks/useTransactionsByFilters";
-import { centsToDollarString } from "@/lib/utils";
-import Head from "next/head";
-import React, { Suspense } from "react";
+import { centsToDollarString, getPartOfDateAsStr } from "@/lib/utils";
+import { useContext } from "react";
 
 export default function TransactionsChart() {
-  const { curMonthString, startDate, endDate } = useMonthUpToCurrentDate();
-  const { data, error, isLoading } = useTransactionsByFilters({
-    startDatetime: startDate,
-    endDatetime: endDate,
-    dateOrder: "asc",
-  });
-
-  const monthSpend = sumMonthSpend(data?.transactions || []);
-
-  const aggregated_by = AggregateBy.DAY;
-
-  const aggregatedTransactions = aggregateTransactions(
-    data?.transactions || [],
-    aggregated_by
-  );
+  const transactionData = useContext(TransactionDataContext);
+  const {
+    filters: { startDate },
+    data: { aggregatedTransactions = [], sumOfTransactions },
+  } = transactionData;
   return (
     <Card className="overflow-hidden">
-      <Header monthName={curMonthString} monthSpend={monthSpend} />
+      <Header
+        monthName={getPartOfDateAsStr(startDate, "month")}
+        monthSpend={sumOfTransactions}
+      />
       <CardContent className="p-0">
-        {aggregatedTransactions.length === 0 ? (
+        {aggregatedTransactions?.length === 0 ? (
           <Skeleton className="m-4 h-48" />
         ) : (
           <TransactionsChartInner
@@ -51,18 +37,12 @@ export default function TransactionsChart() {
   );
 }
 
-function sumMonthSpend(transactions: Transaction[]): number {
-  return transactions.reduce((acc, cur) => acc + cur.amount_cents, 0);
-}
-
 function Header({
   monthName,
   monthSpend,
-  isLoading,
 }: {
   monthName: string;
-  monthSpend: number;
-  isLoading?: boolean;
+  monthSpend?: number;
 }) {
   return (
     <CardHeader className="space-y-0 pb-0">
@@ -75,7 +55,11 @@ function Header({
             <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
               $
             </span>
-            {centsToDollarString(monthSpend).split("$")[1]}
+            {!!monthSpend ? (
+              centsToDollarString(monthSpend, true).split("$")[1]
+            ) : (
+              <Skeleton className="w-24 h-8" />
+            )}
           </CardTitle>
         </div>
       </div>

@@ -1,9 +1,11 @@
 "use client";
+import { TransactionDataContext } from "@/components/context/transaction-data-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Edit, Home, List } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useContext } from "react";
 
 export default function NavBar() {
   const pathname = usePathname();
