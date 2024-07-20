@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <TransactionDataProvider>
         <HeaderBar />
         <div
-          className="flex-grow px-3 py-2 md:overflow-y-auto md:p-12 overflow-scroll"
+          className="flex-grow px-3 py-2 md:overflow-y-auto md:p-12 overflow-scroll no-scrollbar"
           ref={scrollContainerRef}
         >
           {children}

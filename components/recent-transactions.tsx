@@ -1,17 +1,19 @@
+"use client";
+import { TransactionDataContext } from "@/components/context/transaction-data-provider";
 import DashboardCard from "@/components/dashboard-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchTransactionsForFilters } from "@/data/query/transactions";
 import { centsToDollarString } from "@/lib/utils";
-import { unstable_noStore } from "next/cache";
+import { useContext } from "react";
 
-export default async function RecentTransactions() {
-  unstable_noStore();
-  const recentTransactions = await fetchTransactionsForFilters({
-    numberOfTransactions: 10,
-  });
+export default function RecentTransactions() {
+  const {
+    data: { transactions = [] },
+    status: { isLoading },
+  } = useContext(TransactionDataContext);
+  const recentTransactions = [...transactions].reverse().slice(0, 5);
   return (
-    <DashboardCard title="Recent">
-      {recentTransactions.length ? (
+    <DashboardCard title="Latest">
+      {!isLoading ? (
         <div className="flex flex-col gap-1">
           {recentTransactions.map((transaction) => {
             const { uuid, amount_cents, description, is_positive } =

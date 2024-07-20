@@ -39,7 +39,9 @@ function groupTransactionsByDay(
 export function TransactionsEditTableInner(props: Props) {
   const { transactions } = props;
 
-  const groupedTransactions = groupTransactionsByDay(transactions);
+  const reversed = [...transactions].reverse();
+
+  const groupedTransactions = groupTransactionsByDay(reversed);
 
   const [selectedTransactions, setSelectedTransactions] = useState<
     Transaction[]
