@@ -33,7 +33,7 @@ async function seedTransactions() {
         amount_cents: Number(row[3]) * 100,
         category: row[2],
         description: row[1],
-        timestamp_utc: timestamp_utc,
+        timestamp_utc: timestamp_as_june,
         currency_code: "USD",
       };
 

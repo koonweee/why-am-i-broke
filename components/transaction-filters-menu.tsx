@@ -6,19 +6,16 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import {
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, getPartOfDateAsStr } from "@/lib/utils";
+import { getPartOfDateAsStr } from "@/lib/utils";
 import { CalendarIcon, ListFilterIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -42,10 +39,10 @@ export default function TransactionFiltersMenu() {
   const [open, setOpen] = useState(false);
   return (
     <Drawer open={open} onOpenChange={(newState: boolean) => setOpen(newState)}>
-      <DrawerTrigger>
+      <DrawerTrigger className={"focus:outline-none"}>
         <ListFilterIcon size={20} />
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className={"focus:outline-none"}>
         <div className="flex flex-col mx-4 mt-4 gap-2 text-sm font-semibold">
           Date range
           <Popover>

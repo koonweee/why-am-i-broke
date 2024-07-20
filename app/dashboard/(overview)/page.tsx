@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
       {/* <Suspense fallback={<Skeleton className="w-full h-40" />}>
         <MonthStats />
       </Suspense> */}

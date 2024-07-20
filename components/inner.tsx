@@ -2,11 +2,12 @@
 
 import { deleteTransactions } from "@/components/transactions-edit-table/actions";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { AggregateBy, Transaction } from "@/data/types";
+import { Transaction } from "@/data/types";
 import { centsToDollarString, cn, pluralize } from "@/lib/utils";
 import { CheckIcon, PencilIcon, TrashIcon, XIcon } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { mutate } from "swr";
 
 interface Props {
   transactions: Transaction[];
@@ -145,7 +146,21 @@ export function TransactionsEditTableInner(props: Props) {
                     action={(_formData) => {
                       deleteTransactions(
                         selectedTransactions.map((t) => t.uuid)
-                      );
+                      ).then(() => {
+                        mutate(
+                          (key: any) => {
+                            return (
+                              Array.isArray(key) &&
+                              key[0] === "/api/transaction/get-for-filters"
+                            );
+                          },
+                          undefined,
+                          {
+                            revalidate: true,
+                          }
+                        );
+                      });
+
                       // Clear selected transactions and hide delete confirmation
                       setSelectedTransactions([]);
                       setShowDeleteConfirmation(false);
