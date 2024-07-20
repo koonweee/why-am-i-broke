@@ -128,3 +128,11 @@ export function getPartOfDateAsStr(date: Date, part: "day" | "month" | "year") {
       return date.getFullYear().toString();
   }
 }
+
+export function dateToLegibleString(date: Date, includeYear = true) {
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: includeYear ? "numeric" : undefined,
+  });
+}

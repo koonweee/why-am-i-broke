@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AggregateBy, AggregatedTransactions } from "@/data/types";
-import { centsToDollarString } from "@/lib/utils";
+import { centsToDollarString, dateToLegibleString } from "@/lib/utils";
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -84,10 +84,7 @@ export function getXAxisFormatter(aggregateBy: AggregateBy) {
       // YYYY-MM-DD to "Jun 12"
       return (value: string) => {
         const date = new Date(value);
-        return date.toLocaleDateString("en-US", {
-          day: "numeric",
-          month: "short",
-        });
+        return dateToLegibleString(date, false);
       };
     case AggregateBy.WEEK:
       // YYYY-WW to "2024, week 1"

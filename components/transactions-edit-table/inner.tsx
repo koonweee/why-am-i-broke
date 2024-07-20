@@ -3,7 +3,12 @@
 import { deleteTransactions } from "@/components/transactions-edit-table/actions";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Transaction } from "@/data/types";
-import { centsToDollarString, cn, pluralize } from "@/lib/utils";
+import {
+  centsToDollarString,
+  cn,
+  dateToLegibleString,
+  pluralize,
+} from "@/lib/utils";
 import { CheckIcon, PencilIcon, TrashIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -71,10 +76,7 @@ export function TransactionsEditTableInner(props: Props) {
         return (
           <div key={date} className="flex flex-col">
             <div className="text-md font-semibold text-end border-b py-1">
-              {dateObj.toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-              })}
+              {dateToLegibleString(dateObj, false)}
             </div>
             {transactions.map((transaction) => {
               return (

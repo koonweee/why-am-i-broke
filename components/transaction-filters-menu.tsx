@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getPartOfDateAsStr } from "@/lib/utils";
+import { dateToLegibleString, getPartOfDateAsStr } from "@/lib/utils";
 import { CalendarIcon, ListFilterIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -37,14 +37,17 @@ export default function TransactionFiltersMenu() {
   };
   const rangeSelected = range?.from && range?.to;
   const [open, setOpen] = useState(false);
+  const [selectedQuickSelectDateRange, setSelectedQuickSelectDateRange] =
+    useState<string | undefined>(undefined);
+  const quickSelectDateRangeOptions = getQuickSelectDateRangeOptions();
   return (
     <Drawer open={open} onOpenChange={(newState: boolean) => setOpen(newState)}>
       <DrawerTrigger className={"focus:outline-none"}>
         <ListFilterIcon size={20} />
       </DrawerTrigger>
       <DrawerContent className={"focus:outline-none"}>
-        <div className="flex flex-col mx-4 mt-4 gap-2 text-sm font-semibold">
-          Date range
+        <div className="flex flex-col mx-4 mt-4 gap-2 text-sm font-semibold py-4">
+          <div className="pl-2">Date range</div>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant={"outline"}>
@@ -59,9 +62,37 @@ export default function TransactionFiltersMenu() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="range" selected={range} onSelect={setRange} />
+              <Calendar
+                mode="range"
+                selected={range}
+                onSelect={(range) => {
+                  setRange(range);
+                  setSelectedQuickSelectDateRange(undefined);
+                }}
+              />
             </PopoverContent>
           </Popover>
+          <div className="flex flex-row gap-2 justify-end">
+            {quickSelectDateRangeOptions.map((option) => {
+              return (
+                <Button
+                  key={option.label}
+                  variant={
+                    selectedQuickSelectDateRange === option.label
+                      ? "secondary"
+                      : "outline"
+                  }
+                  onClick={() => {
+                    setSelectedQuickSelectDateRange(option.label);
+                    setRange(option.value);
+                  }}
+                  size={"sm"}
+                >
+                  {option.label}
+                </Button>
+              );
+            })}
+          </div>
         </div>
         <DrawerFooter className="flex flex-row items-center justify-between">
           <DrawerClose>
@@ -86,5 +117,25 @@ function formatDateRange(range?: DateRange) {
   if (!range) return undefined;
   const { from, to } = range;
   if (!from && !to) return undefined;
-  return `${from?.toLocaleDateString()} - ${to?.toLocaleDateString() ?? ""}`;
+  return `${dateToLegibleString(from!)} - ${to ? dateToLegibleString(to) : ""}`;
+}
+
+function getQuickSelectDateRangeOptions() {
+  const curDate = new Date();
+  const curMonth = curDate.getMonth();
+  const curYear = curDate.getFullYear();
+
+  // Return options for last 3 months, including current month
+  return Array.from({ length: 3 }).map((_, index) => {
+    const date = new Date(curYear, curMonth - index);
+    return {
+      label: date.toLocaleDateString("en-US", {
+        month: "long",
+      }),
+      value: {
+        from: new Date(date.getFullYear(), date.getMonth(), 1),
+        to: new Date(date.getFullYear(), date.getMonth() + 1, 0),
+      },
+    };
+  });
 }

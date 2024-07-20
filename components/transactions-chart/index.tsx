@@ -9,21 +9,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { centsToDollarString, getPartOfDateAsStr } from "@/lib/utils";
+import {
+  centsToDollarString,
+  dateToLegibleString,
+  getPartOfDateAsStr,
+} from "@/lib/utils";
 import { useContext } from "react";
 
 export default function TransactionsChart() {
   const transactionData = useContext(TransactionDataContext);
   const {
-    filters: { startDate },
+    filters: { startDate, endDate = new Date() },
     data: { aggregatedTransactions = [], sumOfTransactions },
   } = transactionData;
+  const dateRange = getDateRangeString(startDate, endDate);
   return (
     <Card className="overflow-hidden">
-      <Header
-        monthName={getPartOfDateAsStr(startDate, "month")}
-        monthSpend={sumOfTransactions}
-      />
+      <Header dateRange={dateRange} dateRangeSpend={sumOfTransactions} />
       <CardContent className="p-0">
         {aggregatedTransactions?.length === 0 ? (
           <Skeleton className="m-4 h-48" />
@@ -38,25 +40,23 @@ export default function TransactionsChart() {
 }
 
 function Header({
-  monthName,
-  monthSpend,
+  dateRange,
+  dateRangeSpend,
 }: {
-  monthName: string;
-  monthSpend?: number;
+  dateRange: string;
+  dateRangeSpend?: number;
 }) {
   return (
     <CardHeader className="space-y-0 pb-0">
       <div className="flex justify-end">
-        <div>
-          <CardDescription className="text-end">
-            {monthName} spend
-          </CardDescription>
-          <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
+        <div className="text-end">
+          <CardDescription>{dateRange}</CardDescription>
+          <CardTitle className="flex items-baseline gap-1 text-4xl justify-end">
             <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
               $
             </span>
-            {!!monthSpend ? (
-              centsToDollarString(monthSpend, true).split("$")[1]
+            {!!dateRangeSpend ? (
+              centsToDollarString(dateRangeSpend, true).split("$")[1]
             ) : (
               <Skeleton className="w-24 h-8" />
             )}
@@ -65,4 +65,32 @@ function Header({
       </div>
     </CardHeader>
   );
+}
+
+function getDateRangeString(startDate: Date, endDate: Date) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  // If start and end date are the same month
+  if (
+    start.getMonth() === end.getMonth() &&
+    start.getFullYear() === end.getFullYear()
+  ) {
+    const endDateIsLastDayOfMonth =
+      end.getDate() ===
+      new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate();
+    const endDateIsToday = end.toDateString() === new Date().toDateString();
+    const startDateIsFirstDayOfMonth = start.getDate() === 1;
+    // If range is start of month to end of month/present, only show month
+    if (
+      startDateIsFirstDayOfMonth &&
+      (endDateIsLastDayOfMonth || endDateIsToday)
+    ) {
+      const isCurrentYear = start.getFullYear() === new Date().getFullYear();
+      return start.toLocaleDateString("en-US", {
+        month: "long",
+        year: isCurrentYear ? undefined : "numeric",
+      });
+    }
+  }
+  return `${dateToLegibleString(start)} - ${dateToLegibleString(end)}`;
 }

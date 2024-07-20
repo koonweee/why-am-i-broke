@@ -1,6 +1,6 @@
 "use client";
 import { TransactionDataContext } from "@/components/context/transaction-data-provider";
-import { TransactionsEditTableInner } from "@/components/inner";
+import { TransactionsEditTableInner } from "@/components/transactions-edit-table/inner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useContext } from "react";
 
