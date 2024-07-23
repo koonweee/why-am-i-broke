@@ -1,6 +1,7 @@
 "use client";
-import { providerMap } from "@/app/api/auth/[...nextauth]/options";
+import { providerMap } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { CircleDollarSignIcon } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +12,10 @@ export default function Home() {
   const router = useRouter();
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-4xl font-bold">why-am-i-broke</h1>
+      <CircleDollarSignIcon size={48} />
+      <div className="flex flex-row gap-2 text-4xl font-bold items-center">
+        why-am-i-broke
+      </div>
       {session && (
         <div className="flex flex-col items-center gap-4">
           <p>

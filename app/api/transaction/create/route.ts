@@ -5,12 +5,18 @@ import {
   transactionCreationRequestSchema,
 } from "../types";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   return new Response("Hello World", { status: 200 });
 }
 
-export async function POST(request: Request) {
+export const POST = auth(async function POST(request: any) {
+  // if (!request.auth) {
+  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // } Disable auth until we figure out API key for iOS shortcut use
+
   // Extract 'amount' from the json body
   const requestJson = await request.json();
   // Validate the request
@@ -65,4 +71,4 @@ export async function POST(request: Request) {
   return new Response(JSON.stringify({ requestJson, status: 200 }), {
     status: 200,
   });
-}
+});

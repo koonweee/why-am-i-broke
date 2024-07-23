@@ -1,4 +1,5 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
+
 import GitHubProvider from "next-auth/providers/github";
 import { Provider } from "next-auth/providers/index";
 
@@ -9,10 +10,10 @@ const providers: Provider[] = [
   }),
 ];
 
-export const authOptions: NextAuthOptions = {
+export const authOptions = {
   providers,
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -34,3 +35,5 @@ export const providerMap = providers.map((provider) => {
     };
   }
 });
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);

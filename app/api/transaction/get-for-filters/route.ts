@@ -1,14 +1,18 @@
 import { z } from "zod";
 
-import { PrismaClient } from "@prisma/client";
 import prisma from "@/db";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
 /**
  * Fetches Transactions from the database based on the filters provided
  * @param request
  */
 
-export async function GET(request: Request) {
+export const GET = auth(async function GET(request: any) {
+  if (!request.auth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   let requestFiltersFromParams;
   try {
     const { searchParams } = new URL(request.url);
@@ -59,7 +63,7 @@ export async function GET(request: Request) {
       status: 500,
     });
   }
-}
+});
 
 export interface TransactionFilters {
   startDatetime: string; // ISO 8601 datetime string ie. "2021-01-01T00:00:00Z"

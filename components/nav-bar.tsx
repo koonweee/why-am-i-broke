@@ -6,9 +6,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Home, List } from "lucide-react";
+import { Home, List, SettingsIcon } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
@@ -28,6 +30,7 @@ export default function NavBar(props: Props) {
     });
   };
   const { data: session } = useSession();
+  const { name, email, image } = session?.user ?? {};
   return (
     <div className="flex justify-between px-4 py-2 items-center bg-background border-t">
       <div className="flex flex-row gap-4 items-center">
@@ -52,37 +55,39 @@ export default function NavBar(props: Props) {
           <List className={cn("h-[1.2rem] w-[1.2rem]")} />
         </Button>
       </div>
-      <div className="flex flex-row gap-4 items-center">
-        <div>
-          {session ? (
-            <Popover>
-              <PopoverTrigger>
-                <div className="text-sm">
-                  Hi, {session.user?.name?.split(" ")[0]}
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-fit p-0">
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    signOut({
-                      callbackUrl: "/",
-                      redirect: true,
-                    })
-                  }
-                >
-                  Sign out
-                </Button>
-              </PopoverContent>
-            </Popover>
+      <Popover>
+        <PopoverTrigger>
+          {image ? (
+            <Image
+              src={image}
+              alt={name ?? "user-not-found"}
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
           ) : (
-            <Button variant="outline" size="default" onClick={() => signIn()}>
-              Sign in
-            </Button>
+            <SettingsIcon size={32} />
           )}
-        </div>
-        <ThemeToggle />
-      </div>
+        </PopoverTrigger>
+        <PopoverContent className="w-fit p-0">
+          <div className="flex flex-col gap-3 p-4 items-end text-sm">
+            <div>Hi, {name ? name.split(" ")[0] : "user not found"}!</div>
+            <Separator />
+            <button
+              onClick={() =>
+                signOut({
+                  callbackUrl: "/",
+                  redirect: true,
+                })
+              }
+              className="text-right"
+            >
+              Sign out
+            </button>
+            <ThemeToggle useText />
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
