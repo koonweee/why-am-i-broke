@@ -1,8 +1,14 @@
 "use client";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Home, List } from "lucide-react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
@@ -21,6 +27,7 @@ export default function NavBar(props: Props) {
       behavior: "smooth",
     });
   };
+  const { data: session } = useSession();
   return (
     <div className="flex justify-between px-4 py-2 items-center bg-background border-t">
       <div className="flex flex-row gap-4 items-center">
@@ -45,7 +52,37 @@ export default function NavBar(props: Props) {
           <List className={cn("h-[1.2rem] w-[1.2rem]")} />
         </Button>
       </div>
-      <ThemeToggle />
+      <div className="flex flex-row gap-4 items-center">
+        <div>
+          {session ? (
+            <Popover>
+              <PopoverTrigger>
+                <div className="text-sm">
+                  Hi, {session.user?.name?.split(" ")[0]}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-fit p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    signOut({
+                      callbackUrl: "/",
+                      redirect: true,
+                    })
+                  }
+                >
+                  Sign out
+                </Button>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Button variant="outline" size="default" onClick={() => signIn()}>
+              Sign in
+            </Button>
+          )}
+        </div>
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

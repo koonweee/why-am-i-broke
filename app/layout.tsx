@@ -3,6 +3,7 @@ import { Ubuntu_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthSessionProvider } from "@/components/auth-session-provider";
 
 const fontMono = Ubuntu_Mono({
   weight: ["400", "700"],
@@ -27,9 +28,11 @@ export default function RootLayout({
           fontMono.className
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+        <AuthSessionProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
