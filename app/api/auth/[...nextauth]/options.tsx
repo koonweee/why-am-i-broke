@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
-import { Provider } from "next-auth/providers";
 import GitHubProvider from "next-auth/providers/github";
+import { Provider } from "next-auth/providers/index";
 
 const providers: Provider[] = [
   GitHubProvider({
